@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading;
 using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace Sleepy.Controllers {
 	public class SleepController : ApiController {
@@ -15,8 +16,8 @@ namespace Sleepy.Controllers {
 // do something here
 
 $.ajax({
-  url: /sleep/1000, // sleep for 1000ms on the server
-  async: false      // execute this request synchronously
+  url: ""/sleep/1000"", // sleep for 1000ms on the server
+  async: false        // execute this request synchronously
 })
 
 // continue doing something here
@@ -66,7 +67,11 @@ $.ajax({
 		public object Get(int id) {
 			var millisecondsTimeout = id;
 			Thread.Sleep(millisecondsTimeout);
-			return new { slept = millisecondsTimeout };
+			var json = JsonConvert.SerializeObject(new { slept = millisecondsTimeout });
+			return new HttpResponseMessage
+			       	{
+			       		Content = new StringContent(json, Encoding.UTF8, "application/json")
+			       	};
 		}
 	}
 }
